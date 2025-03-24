@@ -1,12 +1,11 @@
 <!-- src/components/activities/ActivityForm.vue -->
 <template>
-  <div>
+  <section>
     <activity-tabs :active-tab="activityType" @change-tab="changeActivityType" />
-
-    <div class="p-4 md:p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 bg-amber-300">
-        <div class="grid grid-cols-2 gap-4 bg-amber-700 md:grid-rows-2">
-          <div class="grid grid-cols-1 bg-blue-500 md:col-span-1">
+    <div class="p-4 ml-3">
+      <div class="max-w-4xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1">
             <div>
               <label class="block text-sm font-medium mb-1">Activity Name</label>
               <div class="relative w-xs">
@@ -58,7 +57,7 @@
               </div>
             </template>
           </div>
-          <div class="md:col-span-full">
+          <div v-if="activityType === 'production'">
             <activity-add-ons :visible="showAddOns" />
           </div>
         </div>
@@ -83,7 +82,6 @@
             />
           </div>
         </template>
-
         <div class="md:col-span-2">
           <label class="block text-sm font-medium mb-1">Notes</label>
           <textarea
@@ -92,39 +90,39 @@
             placeholder="Type here..."
           ></textarea>
         </div>
-      </div>
-
-      <!-- <activity-add-ons :visible="showAddOns" /> -->
-
-      <div
-        class="flex flex-col sm:flex-row sm:justify-end mt-6 space-y-2 sm:space-y-0 sm:space-x-2"
-      >
-        <button
-          v-if="activityType === 'production'"
-          @click="toggleAddOns"
-          class="text-white bg-green-600 px-4 py-2 rounded order-2 sm:order-1"
+        <div
+          class="flex flex-col sm:flex-row sm:justify-end mt-6 space-y-2 sm:space-y-0 sm:space-x-2"
         >
-          {{ showAddOns ? 'Hide Add-Ons' : 'Show Add-Ons' }}
-        </button>
-        <button
-          @click="submitForm"
-          class="text-white bg-green-600 px-4 py-2 rounded order-1 sm:order-2"
-        >
-          {{ formMode === 'edit' ? 'Update' : 'Add Activity' }}
-        </button>
-        <button
-          v-if="formMode === 'edit'"
-          @click="endActivity"
-          class="text-white bg-yellow-500 px-4 py-2 rounded order-3 sm:order-3"
-        >
-          End Activity
-        </button>
-        <button @click="cancel" class="text-white bg-red-600 px-4 py-2 rounded order-4 sm:order-4">
-          Cancel
-        </button>
+          <button
+            v-if="activityType === 'production'"
+            @click="toggleAddOns"
+            class="text-white bg-green-600 px-4 py-2 rounded order-2 sm:order-1"
+          >
+            {{ showAddOns ? 'Hide Add-Ons' : 'Show Add-Ons' }}
+          </button>
+          <button
+            @click="submitForm"
+            class="text-white bg-green-600 px-4 py-2 rounded order-1 sm:order-2"
+          >
+            {{ formMode === 'edit' ? 'Update' : 'Add Activity' }}
+          </button>
+          <button
+            v-if="formMode === 'edit'"
+            @click="endActivity"
+            class="text-white bg-yellow-500 px-4 py-2 rounded order-3 sm:order-3"
+          >
+            End Activity
+          </button>
+          <button
+            @click="cancel"
+            class="text-white bg-red-600 px-4 py-2 rounded order-4 sm:order-4"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-green-400">
+  <div class="">
     <h3 class="text-lg font-medium mb-4">Add-Ons</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div v-for="(addon, index) in addons" :key="index" class="mb-2 md:mb-4">
