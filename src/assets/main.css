@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+
+/* Custom styles */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+}
+
+/* Add any custom utility classes here */
+.text-td-green {
+  color: #006633;
+}
+
+.bg-td-green {
+  background-color: #006633;
+}
