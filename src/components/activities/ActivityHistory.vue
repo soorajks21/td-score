@@ -225,7 +225,7 @@ const filteredData = computed(() => {
     return activitiesStore.activities
   }
 
-  return activitiesStore.activities.filter(
+  return activitiesStore.visibleActivities.filter(
     (item) => item.type.toLowerCase() === activeFilterTab.value,
   )
 })
