@@ -53,6 +53,10 @@ const selectedMonth = ref('Last month')
 
 const emit = defineEmits(['show-log-activity'])
 
+const editActivity = (activity) => {
+  emit('show-log-activity', activity)
+}
+
 const showLogActivityForm = () => {
   emit('show-log-activity')
 }
