@@ -222,7 +222,7 @@ const visibleColumns = computed(() => {
 // Computed properties
 const filteredData = computed(() => {
   if (activeFilterTab.value === 'all') {
-    return activitiesStore.activities
+    return activitiesStore.visibleActivities
   }
 
   return activitiesStore.visibleActivities.filter(

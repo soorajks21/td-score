@@ -130,6 +130,7 @@ import { ref, defineProps, defineEmits, computed } from 'vue'
 import ActivityTabs from './ActivityTabs.vue'
 import ActivityAddOns from './ActivityAddOns.vue'
 import { useActivitiesStore } from '@/stores/activites'
+import { useAuthStore } from '@/stores/auth'
 
 const props = defineProps({
   formMode: {
@@ -144,6 +145,7 @@ const props = defineProps({
 
 const emit = defineEmits(['submit', 'cancel', 'end-activity'])
 const activitiesStore = useActivitiesStore()
+const authStore = useAuthStore()
 
 // State
 const activityType = ref('production')
@@ -219,6 +221,7 @@ const submitForm = () => {
       start: formData.value.startTime || new Date().toLocaleString(),
       end: formData.value.endTime || '',
       note: formData.value.notes,
+      user: authStore.currentUser,
     }
 
     emit('submit', activityData)

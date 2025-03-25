@@ -121,25 +121,30 @@ export const useActivitiesStore = defineStore('activities', () => {
 
   const visibleActivities = computed(() => {
     let filteredActivities = []
-
+    console.log('activites', activities.value)
     if (authStore.isAdmin) {
       // Admins see all activities
       filteredActivities = activities.value
     } else if (authStore.isManager) {
       // Managers see activities from their advisors
       const advisorIds = authStore.managedAdvisors.map((a) => a.id)
+      console.log('adv', advisorIds)
       filteredActivities = activities.value.filter((activity) =>
         advisorIds.includes(activity.advisorId),
       )
+      console.log('fileter isManager', filteredActivities)
     } else if (authStore.isAdvisor) {
       // Advisors see only their own activities
+      console.log('authStore.currentUser.id', authStore.currentUser)
       filteredActivities = activities.value.filter(
         (activity) => activity.advisorId === authStore.currentUser.id,
       )
+      console.log('current user advisor', filteredActivities)
     }
 
     // Apply additional advisor filter if selected by a manager
     if (authStore.isManager && selectedAdvisor.value) {
+      console.log('NO for advisor')
       filteredActivities = filteredActivities.filter(
         (activity) => activity.advisorId === selectedAdvisor.value.id,
       )
@@ -167,6 +172,7 @@ export const useActivitiesStore = defineStore('activities', () => {
 
   // Actions
   function setSelectedAdvisor(advisor) {
+    console.log('set adv', advisor)
     selectedAdvisor.value = advisor
   }
 
@@ -175,10 +181,10 @@ export const useActivitiesStore = defineStore('activities', () => {
   }
 
   function addActivity(activityData) {
+    console.log('user in add activity', authStore.currentUser)
     const newActivity = {
       id: Date.now(),
       status: 'In Progress',
-      advisor: 'Francis Proulx',
       advisor: authStore.currentUser.name,
       advisorId: authStore.currentUser.id,
       ...activityData,
@@ -189,6 +195,7 @@ export const useActivitiesStore = defineStore('activities', () => {
   }
 
   function updateActivity(id, data) {
+    console.log('updateACtivity', activityData)
     const activity = getActivityById.value(id)
     if (!activity || !canEditActivity.value(activity)) {
       return null // Permission denied
@@ -228,12 +235,14 @@ export const useActivitiesStore = defineStore('activities', () => {
     if (activityData.type === 'Production' && hasActiveProductionActivity.value) {
       throw new Error('Only one production activity can be active at a time')
     }
-
+    console.log('startactivity', activityData)
     const newActivity = {
       id: Date.now(),
       status: 'In Progress',
-      advisor: activityData.advisor || 'Current User',
-      advisorId: activityData.advisorId || 1,
+      // advisor: activityData.advisor || 'Current User',
+      // advisorId: activityData.user.id || 1,
+      advisor: authStore.currentUser.name,
+      advisorId: authStore.currentUser.id,
       ...activityData,
       start: new Date().toLocaleString(),
     }

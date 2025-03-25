@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
       name: 'Jenn Bouchard',
       role: 'manager',
       avatar: '/avatars/jenn.jpg',
-      advisors: [2, 3, 4], // IDs of advisors this manager oversees
+      advisors: [1, 2, 3, 4], // IDs of advisors this manager oversees
     },
     {
       id: 2,
