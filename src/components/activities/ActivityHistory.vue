@@ -1,6 +1,42 @@
 <!-- src/components/activities/ActivityHistory.vue -->
 <template>
   <div>
+    <!-- Show selected advisor context if applicable -->
+    <div
+      v-if="activitiesStore.selectedAdvisor"
+      class="bg-gray-100 p-3 mb-4 rounded flex items-center justify-between"
+    >
+      <div class="flex items-center">
+        <div class="w-8 h-8 rounded-full bg-white overflow-hidden mr-2">
+          <img
+            :src="activitiesStore.selectedAdvisor.avatar || '/api/placeholder/32/32'"
+            alt="Advisor Avatar"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div>
+          <div class="font-medium">{{ activitiesStore.selectedAdvisor.name }}</div>
+          <div class="text-xs text-gray-600">Viewing activities for this advisor</div>
+        </div>
+      </div>
+      <button @click="clearAdvisorFilter" class="text-gray-500 hover:text-gray-700">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
     <filter-tabs :active-tab="activeFilterTab" @change-tab="changeFilterTab" />
 
     <div class="overflow-x-auto">
@@ -139,8 +175,10 @@ import { useActivitiesStore } from '@/stores/activites'
 import FilterTabs from '../common/FilterTabs.vue'
 import ConfirmationDialog from '../common/ConfirmationDialog.vue'
 import ActivityEdit from './ActivityEdit.vue'
+// import { useAuthStore } from '@/stores/auth'
 
 const activitiesStore = useActivitiesStore()
+// const authStore = useAuthStore()
 
 // State
 const activeFilterTab = ref('all')
@@ -165,6 +203,10 @@ const allColumns = [
   { id: 'addOn', label: 'Add-On' },
   { id: 'note', label: 'Note' },
 ]
+
+const clearAdvisorFilter = () => {
+  activitiesStore.clearSelectedAdvisor()
+}
 
 const visibleColumns = computed(() => {
   if (windowWidth.value < 640) {

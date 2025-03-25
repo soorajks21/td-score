@@ -52,6 +52,8 @@
       @confirm="confirmEndActivity"
       @cancel="cancelEndActivity"
     />
+    <!-- User selector for development (remove in production) -->
+    <user-selector v-if="isDevelopment" />
   </div>
 </template>
 
@@ -63,9 +65,12 @@ import AppSidebar from './components/layout/AppSidebar.vue'
 import HistoryView from './views/HistoryView.vue'
 import LogActivityView from './views/LogActivityView.vue'
 import ConfirmationDialog from './components/common/ConfirmationDialog.vue'
+import UserSelector from './components/common/UserSelector.vue'
+import { useAuthStore } from './stores/auth'
 
 // Store
 const activitiesStore = useActivitiesStore()
+const authStore = useAuthStore()
 
 // State
 const showActivityForm = ref(false)
@@ -74,6 +79,7 @@ const selectedActivity = ref(null)
 const showConfirmDialog = ref(false)
 const timerInterval = ref(null)
 const processingTime = ref('00:00:00')
+const isDevelopment = true
 
 // Methods
 const showLogActivity = (activity = null) => {
@@ -231,6 +237,7 @@ watch(
 
 // Lifecycle hooks
 onMounted(() => {
+  authStore.login(1)
   if (activitiesStore.currentActivity && activitiesStore.currentActivity.type === 'Production') {
     startTimer()
   }

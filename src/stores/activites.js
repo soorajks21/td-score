@@ -1,15 +1,48 @@
 // src/stores/activities.js
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useAuthStore } from './auth'
 
 export const useActivitiesStore = defineStore('activities', () => {
+  const authStore = useAuthStore()
   // State
+  // const activities = ref([
+  //   {
+  //     id: 1,
+  //     type: 'Production',
+  //     status: 'Done',
+  //     advisor: 'Francis Proulx',
+  //     name: 'Key Payment',
+  //     amount: '12',
+  //     start: '11/22/2024 9:15 AM',
+  //     end: '',
+  //     duration: '',
+  //     addOn: 'n/a',
+  //     note: '',
+  //   },
+  //   {
+  //     id: 2,
+  //     type: 'Investment',
+  //     status: 'Done',
+  //     advisor: 'Francis Proulx',
+  //     name: '1 on 1',
+  //     amount: '1',
+  //     start: '11/22/2024 10:00 AM',
+  //     end: '11/22/2024 10:30 AM',
+  //     duration: '00:30:00',
+  //     addOn: '1:1 with Sam',
+  //     note: '',
+  //   },
+  // ])
+
   const activities = ref([
+    // Sample activities as in your images
     {
       id: 1,
       type: 'Production',
-      status: 'Done',
+      status: 'In Progress',
       advisor: 'Francis Proulx',
+      advisorId: 2,
       name: 'Key Payment',
       amount: '12',
       start: '11/22/2024 9:15 AM',
@@ -23,6 +56,7 @@ export const useActivitiesStore = defineStore('activities', () => {
       type: 'Investment',
       status: 'Done',
       advisor: 'Francis Proulx',
+      advisorId: 2,
       name: '1 on 1',
       amount: '1',
       start: '11/22/2024 10:00 AM',
@@ -31,9 +65,38 @@ export const useActivitiesStore = defineStore('activities', () => {
       addOn: '1:1 with Sam',
       note: '',
     },
+    {
+      id: 3,
+      type: 'Investment',
+      status: 'Done',
+      advisor: 'Debbie Santelli',
+      advisorId: 4,
+      name: 'Coaching side-by-side',
+      amount: '1',
+      start: '11/22/2024 02:00 PM',
+      end: '11/22/2024 02:30 PM',
+      duration: '00:30:00',
+      addOn: '',
+      note: 'Coaching with Jenn',
+    },
+    {
+      id: 4,
+      type: 'Investment',
+      status: 'Done',
+      advisor: 'Bob Levesque',
+      advisorId: 3,
+      name: 'Meeting',
+      amount: '1',
+      start: '11/21/2024 10:00 AM',
+      end: '11/21/2024 11:00 AM',
+      duration: '01:00:00',
+      addOn: '',
+      note: 'Team meeting',
+    },
   ])
 
   const currentActivity = ref(null)
+  const selectedAdvisor = ref(null)
 
   // Getters
   const getActivityById = computed(() => {
@@ -56,12 +119,68 @@ export const useActivitiesStore = defineStore('activities', () => {
     )
   })
 
+  const visibleActivities = computed(() => {
+    let filteredActivities = []
+
+    if (authStore.isAdmin) {
+      // Admins see all activities
+      filteredActivities = activities.value
+    } else if (authStore.isManager) {
+      // Managers see activities from their advisors
+      const advisorIds = authStore.managedAdvisors.map((a) => a.id)
+      filteredActivities = activities.value.filter((activity) =>
+        advisorIds.includes(activity.advisorId),
+      )
+    } else if (authStore.isAdvisor) {
+      // Advisors see only their own activities
+      filteredActivities = activities.value.filter(
+        (activity) => activity.advisorId === authStore.currentUser.id,
+      )
+    }
+
+    // Apply additional advisor filter if selected by a manager
+    if (authStore.isManager && selectedAdvisor.value) {
+      filteredActivities = filteredActivities.filter(
+        (activity) => activity.advisorId === selectedAdvisor.value.id,
+      )
+    }
+
+    return filteredActivities
+  })
+
+  // Permission checks
+  const canEditActivity = computed(() => {
+    return (activity) => {
+      if (authStore.isAdmin) {
+        return true // Admins can edit all activities
+      } else if (authStore.isManager) {
+        // Managers can edit activities of their advisors
+        const advisorIds = authStore.managedAdvisors.map((a) => a.id)
+        return advisorIds.includes(activity.advisorId)
+      } else if (authStore.isAdvisor) {
+        // Advisors can only edit their own activities
+        return activity.advisorId === authStore.currentUser.id
+      }
+      return false
+    }
+  })
+
   // Actions
+  function setSelectedAdvisor(advisor) {
+    selectedAdvisor.value = advisor
+  }
+
+  function clearSelectedAdvisor() {
+    selectedAdvisor.value = null
+  }
+
   function addActivity(activityData) {
     const newActivity = {
       id: Date.now(),
       status: 'In Progress',
       advisor: 'Francis Proulx',
+      advisor: authStore.currentUser.name,
+      advisorId: authStore.currentUser.id,
       ...activityData,
       start: new Date().toLocaleString(),
     }
@@ -70,7 +189,12 @@ export const useActivitiesStore = defineStore('activities', () => {
   }
 
   function updateActivity(id, data) {
-    const index = activities.value.findIndex((activity) => activity.id === id)
+    const activity = getActivityById.value(id)
+    if (!activity || !canEditActivity.value(activity)) {
+      return null // Permission denied
+    }
+    const index = activities.value.findIndex((a) => a.id === id)
+
     if (index !== -1) {
       activities.value[index] = { ...activities.value[index], ...data }
       return { ...activities.value[index] }
@@ -78,50 +202,25 @@ export const useActivitiesStore = defineStore('activities', () => {
     return null
   }
 
-  // function endActivity(id = null) {
-  //   const activityId = id || (currentActivity.value && currentActivity.value.id)
-  //   if (activityId) {
-  //     const index = activities.value.findIndex((activity) => activity.id === activityId)
-  //     if (index !== -1) {
-  //       activities.value[index].status = 'Done'
-  //       activities.value[index].end = new Date().toLocaleString()
-
-  //       // Calculate duration
-  //       if (activities.value[index].start) {
-  //         const startTime = new Date(activities.value[index].start)
-  //         const endTime = new Date(activities.value[index].end)
-  //         const durationMs = endTime - startTime
-  //         const hours = Math.floor(durationMs / (1000 * 60 * 60))
-  //           .toString()
-  //           .padStart(2, '0')
-  //         const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60))
-  //           .toString()
-  //           .padStart(2, '0')
-  //         const seconds = Math.floor((durationMs % (1000 * 60)) / 1000)
-  //           .toString()
-  //           .padStart(2, '0')
-  //         activities.value[index].duration = `${hours}:${minutes}:${seconds}`
-  //       }
-
-  //       if (currentActivity.value && currentActivity.value.id === activityId) {
-  //         currentActivity.value = null
-  //       }
-  //     }
-  //   }
-  // }
-
   function setCurrentActivity(activity) {
     currentActivity.value = activity
   }
 
   function deleteActivity(id) {
-    const index = activities.value.findIndex((activity) => activity.id === id)
+    const activity = getActivityById.value(id)
+    if (!activity || !canEditActivity.value(activity)) {
+      return false // Permission denied
+    }
+
+    const index = activities.value.findIndex((a) => a.id === id)
     if (index !== -1) {
       activities.value.splice(index, 1)
       if (currentActivity.value && currentActivity.value.id === id) {
         currentActivity.value = null
       }
+      return true
     }
+    return false
   }
 
   function startActivity(activityData) {
@@ -193,14 +292,19 @@ export const useActivitiesStore = defineStore('activities', () => {
     // State
     activities,
     currentActivity,
+    selectedAdvisor,
 
     // Getters
+    visibleActivities,
+    canEditActivity,
     getActivityById,
     activeActivities,
     completedActivities,
     hasActiveProductionActivity,
 
     // Actions
+    setSelectedAdvisor,
+    clearSelectedAdvisor,
     startActivity,
     addActivity,
     updateActivity,
