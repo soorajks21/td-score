@@ -1,0 +1,81 @@
+{
+  "app": {
+    "title": "TD SCORE",
+    "processingTime": "Processing Time",
+    "endActivity": "End Activity",
+    "update": "Update",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "close": "Close"
+  },
+  "history": {
+    "title": "History",
+    "logActivity": "Log an Activity",
+    "lastMonth": "Last month",
+    "currentMonth": "Current month",
+    "last3Months": "Last 3 months"
+  },
+  "activity": {
+    "name": "Activity Name",
+    "type": "Activity Type",
+    "status": "Status",
+    "start": "Start Time",
+    "end": "End Time",
+    "duration": "Duration",
+    "amount": "Amount",
+    "notes": "Notes",
+    "advisor": "Advisor",
+    "addOn": "Add-On",
+    "inProgress": "In Progress",
+    "done": "Done"
+  },
+  "tabs": {
+    "all": "All",
+    "production": "Production Activities",
+    "investment": "Investment Activities"
+  },
+  "types": {
+    "production": "Production",
+    "investment": "Investment"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "end": "End",
+    "save": "Save Changes",
+    "add": "Add Activity",
+    "showAddOns": "Show Add-Ons",
+    "hideAddOns": "Hide Add-Ons"
+  },
+  "dialogs": {
+    "endConfirm": {
+      "title": "Are you sure?",
+      "message": "Ending this activity will stop the timer and mark the activity as done. This cannot be undone.",
+      "confirm": "YES, End Activity"
+    },
+    "deleteConfirm": {
+      "title": "Are you sure?",
+      "message": "Deleting this activity will remove it from the log permanently. This cannot be undone.",
+      "confirm": "YES, Delete Activity"
+    }
+  },
+  "validation": {
+    "selectActivity": "Please select an activity name",
+    "enterAmount": "Please enter an amount",
+    "activeProduction": "Only one production activity can be active at a time. Please end the current activity first."
+  },
+  "activities": {
+    "keyPayment": "Key Payment",
+    "oneOnOne": "1 on 1",
+    "clientMeeting": "Client Meeting",
+    "coaching": "Coaching side-by-side",
+    "meeting": "Meeting",
+    "portfolioReview": "Portfolio Review"
+  },
+  "addOns": {
+    "issueLetter": "Issue Letter",
+    "followUp": "Post TRX Follow-Up",
+    "outboundCall": "Outbound Call",
+    "keyAdjustments": "Key Adjustments"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "app": {
+    "title": "TD SCORE",
+    "processingTime": "Temps de traitement",
+    "endActivity": "Terminer l'activité",
+    "update": "Mettre à jour",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "close": "Fermer"
+  },
+  "history": {
+    "title": "Historique",
+    "logActivity": "Enregistrer une activité",
+    "lastMonth": "Mois dernier",
+    "currentMonth": "Mois en cours",
+    "last3Months": "3 derniers mois"
+  },
+  "activity": {
+    "name": "Nom de l'activité",
+    "type": "Type d'activité",
+    "status": "Statut",
+    "start": "Heure de début",
+    "end": "Heure de fin",
+    "duration": "Durée",
+    "amount": "Montant",
+    "notes": "Notes",
+    "advisor": "Conseiller",
+    "addOn": "Supplément",
+    "inProgress": "En cours",
+    "done": "Terminé"
+  },
+  "tabs": {
+    "all": "Tous",
+    "production": "Activités de production",
+    "investment": "Activités d'investissement"
+  },
+  "types": {
+    "production": "Production",
+    "investment": "Investissement"
+  },
+  "actions": {
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "end": "Terminer",
+    "save": "Enregistrer les modifications",
+    "add": "Ajouter une activité",
+    "showAddOns": "Afficher les suppléments",
+    "hideAddOns": "Masquer les suppléments"
+  },
+  "dialogs": {
+    "endConfirm": {
+      "title": "Êtes-vous sûr ?",
+      "message": "Terminer cette activité arrêtera le chronomètre et marquera l'activité comme terminée. Cette action ne peut pas être annulée.",
+      "confirm": "OUI, Terminer l'activité"
+    },
+    "deleteConfirm": {
+      "title": "Êtes-vous sûr ?",
+      "message": "La suppression de cette activité l'enlèvera définitivement du journal. Cette action ne peut pas être annulée.",
+      "confirm": "OUI, Supprimer l'activité"
+    }
+  },
+  "validation": {
+    "selectActivity": "Veuillez sélectionner un nom d'activité",
+    "enterAmount": "Veuillez entrer un montant",
+    "activeProduction": "Une seule activité de production peut être active à la fois. Veuillez d'abord terminer l'activité en cours."
+  },
+  "activities": {
+    "keyPayment": "Paiement clé",
+    "oneOnOne": "1 contre 1",
+    "clientMeeting": "Rencontre client",
+    "coaching": "Coaching côte à côte",
+    "meeting": "Réunion",
+    "portfolioReview": "Revue de portefeuille"
+  },
+  "addOns": {
+    "issueLetter": "Lettre d'émission",
+    "followUp": "Suivi post-TRX",
+    "outboundCall": "Appel sortant",
+    "keyAdjustments": "Ajustements clés"
+  }
+}

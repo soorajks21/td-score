@@ -24,10 +24,11 @@
         @click="onEndActivityClick"
         class="bg-white text-red-600 text-xs px-2 py-1 md:px-3 md:py-1 rounded mr-2 md:mr-4"
       >
-        End Activity
+        {{ $t('app.endActivity') }}
       </button>
 
-      <span class="mr-2">EN</span>
+      <!-- <span class="mr-2">EN</span> -->
+      <language-switcher />
     </div>
   </header>
 </template>
@@ -35,6 +36,7 @@
 <script setup>
 import { defineProps, defineEmits, computed } from 'vue'
 import { useActivitiesStore } from '@/stores/activites'
+import LanguageSwitcher from '../common/LanguageSwitcher.vue'
 
 const props = defineProps({
   processingTime: {
