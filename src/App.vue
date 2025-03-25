@@ -111,18 +111,69 @@ const cancelEndActivity = () => {
 }
 
 // Timer functionality unchanged
+// const startTimer = () => {
+//   let seconds = 0
+//   timerInterval.value = setInterval(() => {
+//     seconds++
+//     const hours = Math.floor(seconds / 3600)
+//       .toString()
+//       .padStart(2, '0')
+//     const minutes = Math.floor((seconds % 3600) / 60)
+//       .toString()
+//       .padStart(2, '0')
+//     const secs = (seconds % 60).toString().padStart(2, '0')
+//     processingTime.value = `${hours}:${minutes}:${secs}`
+//   }, 1000)
+// }
+
+// const stopTimer = () => {
+//   if (timerInterval.value) {
+//     clearInterval(timerInterval.value)
+//     timerInterval.value = null
+//     processingTime.value = '00:00:00'
+//   }
+// }
+
+// Timer functionality
 const startTimer = () => {
-  let seconds = 0
-  timerInterval.value = setInterval(() => {
-    seconds++
+  if (timerInterval.value) return // Don't start if already running
+
+  // If there's a current activity, calculate initial time
+  if (activitiesStore.currentActivity) {
+    const startTime = new Date(activitiesStore.currentActivity.start)
+    const now = new Date()
+    const elapsedMs = now - startTime
+
+    // Convert to hours, minutes, seconds
+    let seconds = Math.floor(elapsedMs / 1000)
     const hours = Math.floor(seconds / 3600)
       .toString()
       .padStart(2, '0')
-    const minutes = Math.floor((seconds % 3600) / 60)
+    seconds %= 3600
+    const minutes = Math.floor(seconds / 60)
       .toString()
       .padStart(2, '0')
-    const secs = (seconds % 60).toString().padStart(2, '0')
-    processingTime.value = `${hours}:${minutes}:${secs}`
+    seconds = (seconds % 60).toString().padStart(2, '0')
+
+    processingTime.value = `${hours}:${minutes}:${seconds}`
+  } else {
+    processingTime.value = '00:00:00'
+  }
+
+  // Start the timer
+  let startMs = Date.now() - getSecondsFromTimeString(processingTime.value) * 1000
+  timerInterval.value = setInterval(() => {
+    const elapsedMs = Date.now() - startMs
+    const hours = Math.floor(elapsedMs / (1000 * 60 * 60))
+      .toString()
+      .padStart(2, '0')
+    const minutes = Math.floor((elapsedMs % (1000 * 60 * 60)) / (1000 * 60))
+      .toString()
+      .padStart(2, '0')
+    const seconds = Math.floor((elapsedMs % (1000 * 60)) / 1000)
+      .toString()
+      .padStart(2, '0')
+    processingTime.value = `${hours}:${minutes}:${seconds}`
   }, 1000)
 }
 
@@ -134,14 +185,43 @@ const stopTimer = () => {
   }
 }
 
+// Helper function to convert time string to seconds
+const getSecondsFromTimeString = (timeString) => {
+  const [hours, minutes, seconds] = timeString.split(':').map(Number)
+  return hours * 3600 + minutes * 60 + seconds
+}
+
 // Watchers and lifecycle hooks remain unchanged
+// watch(
+//   () => activitiesStore.currentActivity,
+//   (newVal) => {
+//     if (newVal) {
+//       if (!timerInterval.value) {
+//         startTimer()
+//       }
+//     } else {
+//       stopTimer()
+//     }
+//   },
+//   { immediate: true },
+// )
+
+// onMounted(() => {
+//   if (activitiesStore.currentActivity) {
+//     startTimer()
+//   }
+// })
+
+// onUnmounted(() => {
+//   stopTimer()
+// })
+
+// Watchers
 watch(
   () => activitiesStore.currentActivity,
   (newVal) => {
-    if (newVal) {
-      if (!timerInterval.value) {
-        startTimer()
-      }
+    if (newVal && newVal.type === 'Production') {
+      startTimer()
     } else {
       stopTimer()
     }
@@ -149,8 +229,9 @@ watch(
   { immediate: true },
 )
 
+// Lifecycle hooks
 onMounted(() => {
-  if (activitiesStore.currentActivity) {
+  if (activitiesStore.currentActivity && activitiesStore.currentActivity.type === 'Production') {
     startTimer()
   }
 })

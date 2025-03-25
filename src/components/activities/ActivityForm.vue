@@ -126,9 +126,10 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, computed } from 'vue'
 import ActivityTabs from './ActivityTabs.vue'
 import ActivityAddOns from './ActivityAddOns.vue'
+import { useActivitiesStore } from '@/stores/activites'
 
 const props = defineProps({
   formMode: {
@@ -142,6 +143,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['submit', 'cancel', 'end-activity'])
+const activitiesStore = useActivitiesStore()
 
 // State
 const activityType = ref('production')
@@ -154,6 +156,11 @@ const formData = ref({
   notes: '',
 })
 const activityOptions = ref(['Key Payment', '1 on 1', 'Client Meeting', 'Portfolio Review'])
+
+// Check if there's already an active production activity
+const hasActiveProduction = computed(() => {
+  return activitiesStore.hasActiveProductionActivity
+})
 
 // Methods
 const changeActivityType = (type) => {
@@ -187,14 +194,37 @@ const submitForm = () => {
     return
   }
 
-  emit('submit', {
-    type: activityType.value.charAt(0).toUpperCase() + activityType.value.slice(1),
-    name: formData.value.activityName,
-    amount: formData.value.amount,
-    start: formData.value.startTime,
-    end: formData.value.endTime,
-    note: formData.value.notes,
-  })
+  // Check if trying to start a production activity when one is already running
+  if (activityType.value === 'production' && hasActiveProduction.value) {
+    alert(
+      'Only one production activity can be active at a time. Please end the current activity first.',
+    )
+    return
+  }
+
+  // emit('submit', {
+  //   type: activityType.value.charAt(0).toUpperCase() + activityType.value.slice(1),
+  //   name: formData.value.activityName,
+  //   amount: formData.value.amount,
+  //   start: formData.value.startTime,
+  //   end: formData.value.endTime,
+  //   note: formData.value.notes,
+  // })
+
+  try {
+    const activityData = {
+      type: activityType.value.charAt(0).toUpperCase() + activityType.value.slice(1),
+      name: formData.value.activityName,
+      amount: formData.value.amount,
+      start: formData.value.startTime || new Date().toLocaleString(),
+      end: formData.value.endTime || '',
+      note: formData.value.notes,
+    }
+
+    emit('submit', activityData)
+  } catch (error) {
+    alert(error.message)
+  }
 }
 
 const cancel = () => {

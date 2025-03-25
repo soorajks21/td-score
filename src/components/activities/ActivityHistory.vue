@@ -246,10 +246,10 @@ const cancelEndActivity = () => {
   showEndDialog.value = false
 }
 
-const endActivity = (id) => {
-  activitiesStore.endActivity(id)
-  closeEditModal()
-}
+// const endActivity = (id) => {
+//   activitiesStore.endActivity(id)
+//   closeEditModal()
+// }
 
 // Handle resize for responsive columns
 const handleResize = () => {

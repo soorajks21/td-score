@@ -30,13 +30,28 @@ const props = defineProps({
 const emit = defineEmits(['back'])
 const activitiesStore = useActivitiesStore()
 
+// const submitActivity = (activityData) => {
+//   if (props.formMode === 'create') {
+//     activitiesStore.addActivity(activityData)
+//   } else {
+//     activitiesStore.updateActivity(props.selectedActivity.id, activityData)
+//   }
+//   emit('back')
+// }
+
 const submitActivity = (activityData) => {
-  if (props.formMode === 'create') {
-    activitiesStore.addActivity(activityData)
-  } else {
-    activitiesStore.updateActivity(props.selectedActivity.id, activityData)
+  try {
+    if (props.formMode === 'create') {
+      // Start the activity (will set as current if it's production)
+      activitiesStore.startActivity(activityData)
+    } else {
+      // Update existing activity
+      activitiesStore.updateActivity(props.selectedActivity.id, activityData)
+    }
+    emit('back')
+  } catch (error) {
+    alert(error.message)
   }
-  emit('back')
 }
 
 const cancel = () => {
