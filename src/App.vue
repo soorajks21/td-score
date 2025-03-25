@@ -116,30 +116,6 @@ const cancelEndActivity = () => {
   showConfirmDialog.value = false
 }
 
-// Timer functionality unchanged
-// const startTimer = () => {
-//   let seconds = 0
-//   timerInterval.value = setInterval(() => {
-//     seconds++
-//     const hours = Math.floor(seconds / 3600)
-//       .toString()
-//       .padStart(2, '0')
-//     const minutes = Math.floor((seconds % 3600) / 60)
-//       .toString()
-//       .padStart(2, '0')
-//     const secs = (seconds % 60).toString().padStart(2, '0')
-//     processingTime.value = `${hours}:${minutes}:${secs}`
-//   }, 1000)
-// }
-
-// const stopTimer = () => {
-//   if (timerInterval.value) {
-//     clearInterval(timerInterval.value)
-//     timerInterval.value = null
-//     processingTime.value = '00:00:00'
-//   }
-// }
-
 // Timer functionality
 const startTimer = () => {
   if (timerInterval.value) return // Don't start if already running
