@@ -69,6 +69,26 @@
                   {{ item.status }}
                 </span>
               </template>
+              <template v-else-if="column.id === 'addOn'">
+                <!-- <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs">
+                  {{ item.status }}
+                </span> -->
+                <span
+                  class="pi pi-check-circle items-center px-2 py-0.5 inline-flex text-sm"
+                  :class="item.addOn ? 'text-green-600' : 'text-red-600'"
+                >
+                </span>
+              </template>
+              <template v-else-if="column.id === 'note'">
+                <!-- <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs">
+                  {{ item.status }}
+                </span> -->
+                <span
+                  class="pi pi-check-circle items-center px-2 py-0.5 inline-flex text-sm"
+                  :class="item.note ? 'text-green-600' : 'text-red-600'"
+                >
+                </span>
+              </template>
               <template v-else>
                 {{ item[column.id] || '-' }}
               </template>
